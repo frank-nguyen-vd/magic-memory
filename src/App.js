@@ -1,14 +1,8 @@
 import { useState } from "react";
+import SingleCard from "./components/SingleCard";
 import "./App.css";
 
-const cardImages = [
-    { src: "/img/helmet-1.png" },
-    { src: "/img/potion-1.png" },
-    { src: "/img/ring-1.png" },
-    { src: "/img/scroll-1.png" },
-    { src: "/img/shield-1.png" },
-    { src: "/img/sword-1.png" },
-];
+const cardImages = [{ src: "/img/helmet-1.png" }, { src: "/img/potion-1.png" }, { src: "/img/ring-1.png" }, { src: "/img/scroll-1.png" }, { src: "/img/shield-1.png" }, { src: "/img/sword-1.png" }];
 
 function App() {
     const [cards, setCards] = useState([]);
@@ -16,9 +10,7 @@ function App() {
 
     // shuffle cards
     const shuffleCards = () => {
-        const shuffledCards = [...cardImages, ...cardImages]
-            .sort(() => Math.random() - 0.5)
-            .map((card) => ({ ...card, id: Math.random() }));
+        const shuffledCards = [...cardImages, ...cardImages].sort(() => Math.random() - 0.5).map((card) => ({ ...card, id: Math.random() }));
         setCards(shuffledCards);
         setTurns(0);
     };
@@ -30,20 +22,7 @@ function App() {
 
             <div className="card-grid">
                 {cards.map((card) => (
-                    <div className="card" key={card.id}>
-                        <div>
-                            <img
-                                className="front"
-                                src={card.src}
-                                alt="card front"
-                            />
-                            <img
-                                className="front"
-                                src="/img/cover.png"
-                                alt="card back"
-                            />
-                        </div>
-                    </div>
+                    <SingleCard key={card.id} src={card.src} isOpened={true} />
                 ))}
             </div>
         </div>
