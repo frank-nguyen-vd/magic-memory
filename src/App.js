@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SingleCard from "./components/SingleCard";
 import "./App.css";
 
-const cardImages = [{ src: "/img/helmet-1.png" }, { src: "/img/potion-1.png" }, { src: "/img/ring-1.png" }, { src: "/img/scroll-1.png" }, { src: "/img/shield-1.png" }, { src: "/img/sword-1.png" }];
+const cardImages = [
+    { src: "/img/helmet-1.png", matched: false },
+    { src: "/img/potion-1.png", matched: false },
+    { src: "/img/ring-1.png", matched: false },
+    { src: "/img/scroll-1.png", matched: false },
+    { src: "/img/shield-1.png", matched: false },
+    { src: "/img/sword-1.png", matched: false },
+];
 
 function App() {
     const [cards, setCards] = useState([]);
@@ -13,13 +20,32 @@ function App() {
 
     // shuffle cards
     const shuffleCards = () => {
-        const shuffledCards = [...cardImages, ...cardImages].sort(() => Math.random() - 0.5).map((card) => ({ ...card, id: Math.random() }));
+        const shuffledCards = [...cardImages, ...cardImages]
+            .sort(() => Math.random() - 0.5)
+            .map((card) => ({ ...card, id: Math.random() }));
         setCards(shuffledCards);
         setTurns(0);
     };
 
     const handleChoice = (card) => {
-        console.log(card);
+        choiceOne ? setChoiceTwo(card) : setChoiceOne(card);
+    };
+
+    useEffect(() => {
+        if (choiceOne && choiceTwo) {
+            if (choiceOne.src === choiceTwo.src) {
+                setCards((prevCards) => {
+                    return prevCards.map((card) => (card.src === choiceOne.src ? { ...card, matched: true } : card));
+                });
+            }
+            setTimeout(() => resetTurn(), 500);
+        }
+    }, [choiceOne, choiceTwo]);
+
+    const resetTurn = () => {
+        setChoiceOne(null);
+        setChoiceTwo(null);
+        setTurns((prevTurns) => prevTurns + 1);
     };
 
     return (
@@ -29,7 +55,11 @@ function App() {
 
             <div className="card-grid">
                 {cards.map((card) => (
-                    <SingleCard card={card} handleChoice={handleChoice} isOpened={false} />
+                    <SingleCard
+                        card={card}
+                        handleChoice={handleChoice}
+                        flipped={card === choiceOne || card === choiceTwo || card.matched}
+                    />
                 ))}
             </div>
         </div>
