@@ -32,6 +32,7 @@ function App() {
         choiceOne ? setChoiceTwo(card) : setChoiceOne(card);
     };
 
+    // compare 2 selected cards
     useEffect(() => {
         if (choiceOne && choiceTwo) {
             setDisabled(true);
@@ -51,6 +52,11 @@ function App() {
         setTurns((prevTurns) => prevTurns + 1);
     };
 
+    // start a new game automatically
+    useEffect(() => {
+        shuffleCards();
+    }, []);
+
     return (
         <div className="App">
             <h1>Magic Match</h1>
@@ -66,6 +72,7 @@ function App() {
                     />
                 ))}
             </div>
+            <p>Turns: {turns}</p>
         </div>
     );
 }
